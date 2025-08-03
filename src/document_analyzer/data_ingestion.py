@@ -1,5 +1,6 @@
 import os
 import fitz
+import sys
 import uuid
 from datetime import datetime
 from logger.custom_logger import CustomLogger
@@ -10,33 +11,33 @@ class DocumentHandler:
     Handles PDF saving and reading operations.
     Automatically logs all actions and supports session-based organization.
     """
-    
-    def __init__(self, data_dir=None,session_id=None):
+    def __init__(self,data_dir=None,session_id=None):
         try:
             self.log=CustomLogger().get_logger(__name__)
-            self.data_dir  = data_dir or os.getenv(
+            self.data_dir = data_dir or os.getenv(
                 "DATA_STORAGE_PATH",
                 os.path.join(os.getcwd(), "data", "document_analysis")
             )
             self.session_id = session_id or f"session_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
             
-            # create base session directory
+            # Create base session directory
             self.session_path = os.path.join(self.data_dir, self.session_id)
             
             os.makedirs(self.session_path, exist_ok=True)
-            
+
             self.log.info("PDFHandler initialized", session_id=self.session_id, session_path=self.session_path)
-        
+
         except Exception as e:
             self.log.error(f"Error initializing DocumentHandler: {e}")
-            raise DocumentPortalException("Error initializing DocumentHandler", e) from e
-    
+            raise DocumentPortalException("Error initializing DocumentHandler", sys)
+        
+
     def save_pdf(self,uploaded_file):
         try:
             filename = os.path.basename(uploaded_file.name)
             
             if not filename.lower().endswith(".pdf"):
-                raise DocumentPortalException("Invalid file type. Only PDFs are allowed.")
+                raise DocumentPortalException("Invalid file type. Only PDFs are allowed.",sys)
 
             save_path = os.path.join(self.session_path, filename)
             
@@ -55,7 +56,7 @@ class DocumentHandler:
         try:
             text_chunks = []
             with fitz.open(pdf_path) as doc:
-                for page_num, page in enumerate(doc, start=1):
+                for page_num, page in enumerate(doc, start=1): # type: ignore
                     text_chunks.append(f"\n--- Page {page_num} ---\n{page.get_text()}")
             text = "\n".join(text_chunks)
 
@@ -69,7 +70,7 @@ if __name__ == "__main__":
     from pathlib import Path
     from io import BytesIO
     
-    pdf_path=r"/Users/satishpolasi/Documents/LLMOPS/document_portal/data/document_analysis/NIPS-2017-attention-is-all-you-need-Paper.pdf"
+    pdf_path=r"C:\\Users\\sunny\\document_portal\\data\\document_analysis\\sample.pdf"
     class DummnyFile:
         def __init__(self,file_path):
             self.name = Path(file_path).name
