@@ -1,13 +1,13 @@
 import sys
 import os
-import operator import itemgetter
+from operator import itemgetter
 from typing import List, Optional
 from langchain_core.messages import BaseMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
-from utils.model_loader import modelLeader
+from utils.model_loader import ModelLoader
 from exception.custom_exception import DocumentPortalException
 from logger.custom_logger import CustomLogger
 from prompt.prompt_library import PROMPT_REGISTRY
@@ -19,17 +19,17 @@ class ConversationalRAG:
         try:
             self.log = CustomLogger().get_logger(__name__)
             self.session_id = session_id
-            self.llm = self.Load_LLm()
+            self.llm = self._load_llm()
             self.contextualize_prompt: ChatPromptTemplate = PROMPT_REGISTRY[PromptType.CONTEXTUALIZE_QUESTION.value]
             self.qa_prompt: ChatPromptTemplate = PROMPT_REGISTRY[PromptType.CONTEXT_QA.value]
             if retriever is None:
                 raise ValueError("Retriever cannot be None")
             self.retriever = retriever
-            self.build_lcel_chain()
+            self._build_lcel_chain()
             self.log.info("ConversationalRAG initialized", session_id=self.session_id)
             
         except Exception as e:
-            self.log.error(f"Error initializing ConversationalRAG:", error=str(e)")
+            self.log.error(f"Error initializing ConversationalRAG:", error=str(e))
             raise DocumentPortalException("Initialization error ConversationalRAG", sys)
     
     def load_retriever_from_faiss(self):
@@ -39,7 +39,7 @@ class ConversationalRAG:
         
         try:
             embeddings = ModelLoader().load_embeddings()
-            if not os.path.isdir(index_path)
+            if not os.path.isdir(index_path):
                 raise FileNotFoundError(f"FAISS index directory not found: {index_path}")
                 
             vectorstore = FAISS.load_local(
@@ -49,7 +49,7 @@ class ConversationalRAG:
             )
             self.retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
             self.log.info("FAISS retriever loaded successfully", index_path=index_path, session_id=self.session_id) 
-            self.build_lcel_chain()
+            
             return self.retriever
             
         except Exception as e:
@@ -111,12 +111,12 @@ class ConversationalRAG:
             )
             
             # 2) Retrieve docs for rewritten question
-            retrieve_docs = question_retriever | self.retriever | self.format_docs
+            retrieve_docs = question_retriever | self.retriever | self._format_docs
             
             # 3) Feed context + original input + chat history into answer prompt
             self.chain = (
                 {
-                    "context": retrieve-docs,
+                    "context": retrieve_docs,
                     "input": itemgetter("input"),
                     "chat_history": itemgetter("chat_history"),
                     
@@ -125,7 +125,7 @@ class ConversationalRAG:
                 |self.llm
                 |StrOutputParser()
             )
-            self.log.into("LCEL chain built successfully", session_id=self.session_id)
+            self.log.info("LCEL chain built successfully", session_id=self.session_id)
         except Exception as e:
             self.log.error("Failed to build LCEL chain", error=str(e))
             raise DocumentPortalException("Building LCEL chain error in ConversationalRAG", sys)

@@ -24,7 +24,7 @@ class DocumentIngestor:
             self.faiss_dir.mkdir(parents=True, exist_ok=True)
             
             # sessionized paths
-            self.session_id = session_id or f"session_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}
+            self.session_id = session_id or f"session_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
             self.session_temp_dir = self.temp_dir / self.session_id
             self.session_faiss_dir = self.faiss_dir / self.session_id
             self.session_temp_dir.mkdir(parents=True, exist_ok=True)
