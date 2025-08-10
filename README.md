@@ -34,7 +34,7 @@ git commit -m "<write your commit message>"
 git push
 
 # Cloning the repository
-git clone https://github.com/sunnysavita10/document_portal.git
+git clone https://github.com/satishpolasi/document_portal.git
 ```
 ## Minimum Requirements for the Project
 
@@ -67,4 +67,3 @@ git clone https://github.com/sunnysavita10/document_portal.git
 ### Gemini API Key
 - [Get your API Key](https://aistudio.google.com/apikey)  
 - [Gemini Documentation](https://ai.google.dev/gemini-api/docs/models)
-
