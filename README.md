@@ -67,3 +67,6 @@ git clone https://github.com/satishpolasi/document_portal.git
 ### Gemini API Key
 - [Get your API Key](https://aistudio.google.com/apikey)  
 - [Gemini Documentation](https://ai.google.dev/gemini-api/docs/models)
+
+### command for executing the fast api
+uvicorn api.main:app --reload
