@@ -15,7 +15,7 @@ SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".txt"}
 # Helpers (file I/O + loading)  #
 # ----------------------------- #
 def generate_session_id(prefix: str = "session") -> str:
-    ist = ZoneInfo("America/LosAngeles")
+    ist = ZoneInfo("America/Los_Angeles")
     return f"{prefix}_{datetime.now(ist).strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
 
 def save_uploaded_files(uploaded_files: Iterable, target_dir: Path) -> List[Path]:
