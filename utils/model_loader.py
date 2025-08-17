@@ -1,29 +1,29 @@
+
 import os
 import sys
 from dotenv import load_dotenv
 from utils.config_loader import load_config
+from .config_loader import load_config
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
 #from langchain_openai import ChatOpenAI
-from logger.custom_logger import CustomLogger
+from logger import GLOBAL_LOGGER as log
 from exception.custom_exception import DocumentPortalException
-
-
-log = CustomLogger().get_logger(__name__)
 
 class ModelLoader:
     
     """
-    A utility class to load embeddings models, ll models from various sources.
+    A utility class to load embedding models and LLM models.
     """
     
     def __init__(self):
+        
         load_dotenv()
         self._validate_env()
         self.config=load_config()
         log.info("Configuration loaded successfully", config_keys=list(self.config.keys()))
-    
+        
     def _validate_env(self):
         """
         Validate necessary environment variables.
@@ -33,22 +33,22 @@ class ModelLoader:
         self.api_keys={key:os.getenv(key) for key in required_vars}
         missing = [k for k, v in self.api_keys.items() if not v]
         if missing:
-            log.error("Missing  environment variables", missing_vars=missing)
+            log.error("Missing environment variables", missing_vars=missing)
             raise DocumentPortalException("Missing environment variables", sys)
-        log.info("Environment variables validated", available_keys=[K for K in self.api_keys if self.api_keys[K]])
-    
+        log.info("Environment variables validated", available_keys=[k for k in self.api_keys if self.api_keys[k]])
+        
     def load_embeddings(self):
         """
         Load and return the embedding model.
         """
         try:
-            log.info("Loading embedding model....")
+            log.info("Loading embedding model...")
             model_name = self.config["embedding_model"]["model_name"]
             return GoogleGenerativeAIEmbeddings(model=model_name)
         except Exception as e:
             log.error("Error loading embedding model", error=str(e))
             raise DocumentPortalException("Failed to load embedding model", sys)
-    
+        
     def load_llm(self):
         """
         Load and return the LLM model.
@@ -58,8 +58,8 @@ class ModelLoader:
         llm_block = self.config["llm"]
 
         log.info("Loading LLM...")
-       
-        provider_key = os.getenv("LLM_PROVIDER", "google")  # Default groq
+
+        provider_key = os.getenv("LLM_PROVIDER", "google")  # Default google
         if provider_key not in llm_block:
             log.error("LLM provider not found in config", provider_key=provider_key)
             raise ValueError(f"Provider '{provider_key}' not found in config")
@@ -83,7 +83,7 @@ class ModelLoader:
         elif provider == "groq":
             llm=ChatGroq(
                 model=model_name,
-                api_key=self.api_keys["GROQ_API_KEY"],
+                api_key=self.api_keys["GROQ_API_KEY"], #type: ignore
                 temperature=temperature,
             )
             return llm
@@ -98,7 +98,9 @@ class ModelLoader:
         else:
             log.error("Unsupported LLM provider", provider=provider)
             raise ValueError(f"Unsupported LLM provider: {provider}")
-
+        
+    
+    
 if __name__ == "__main__":
     loader = ModelLoader()
     
