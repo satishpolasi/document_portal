@@ -1,10 +1,12 @@
+# Test code for document ingestion and analysis using a PDFHandler and DocumentAnalyzer
+
 # import os
 # from pathlib import Path
 # from src.document_analyzer.data_ingestion import DocumentHandler       # Your PDFHandler class
 # from src.document_analyzer.data_analysis import DocumentAnalyzer  # Your DocumentAnalyzer class
 
 # # Path to the PDF you want to test
-# PDF_PATH = r"/Users/satishpolasi/Documents/LLMOPS/document_portal/data/document_analysis/sample.pdf"
+# PDF_PATH = r"C:\\Users\\sunny\\document_portal\\data\\document_analysis\\sample.pdf"
 
 # # Dummy file wrapper to simulate uploaded file (Streamlit style)
 # class DummyFile:
@@ -59,18 +61,18 @@
 
 # # ---- Step 1: Save and combine PDFs ---- #
 # def test_compare_documents():
-#     ref_path = Path("/Users/satishpolasi/Documents/LLMOPS/document_portal/data/document_compare/Long_Report_V1.pdf")
-#     act_path = Path("/Users/satishpolasi/Documents/LLMOPS/document_portal/data/document_compare/Long_Report_V2.pdf")
+#     ref_path = Path("C:\\Complete_Content2\\llmops_batch\\document_portal\\data\\document_compare\\Long_Report_V1.pdf")
+#     act_path = Path("C:\\Complete_Content2\\llmops_batch\\document_portal\\data\\document_compare\\Long_Report_V2.pdf")
 
 #     # Wrap them like Streamlit UploadedFile-style
 #     class FakeUpload:
-#         def __init__(self,file_path:Path):
+#         def __init__(self, file_path: Path):
 #             self.name = file_path.name
-#             self._buffer =  file_path.read_bytes()
+#             self._buffer = file_path.read_bytes()
 
 #         def getbuffer(self):
-#            return self._buffer
-       
+#             return self._buffer
+
 #     # Instantiate
 #     comparator = DocumentIngestion()
 #     ref_upload = FakeUpload(ref_path)
@@ -80,10 +82,10 @@
 #     ref_file, act_file = comparator.save_uploaded_files(ref_upload, act_upload)
 #     combined_text = comparator.combine_documents()
 #     comparator.clean_old_sessions(keep_latest=3)
-    
+
 #     print("\n Combined Text Preview (First 1000 chars):\n")
 #     print(combined_text[:1000])
-    
+
 #     # ---- Step 2: Run LLM comparison ---- #
 #     llm_comparator = DocumentComparatorLLM()
 #     df = llm_comparator.compare_documents(combined_text)
@@ -136,7 +138,7 @@
     
 # if __name__ == "__main__":
 #     # Example PDF path and question
-#     pdf_path = "data/single_document_chat/NIPS-2017-attention-is-all-you-need-Paper.pdf"
+#     pdf_path = "data\\single_document_chat\\NIPS-2017-attention-is-all-you-need-Paper.pdf"
 #     question = "What is the significance of the attention mechanism? can you explain it in simple terms?"
 
 #     if not Path(pdf_path).exists():
@@ -145,7 +147,8 @@
     
 #     # Run the test
 #     test_conversational_rag_on_pdf(pdf_path, question)
-
+    
+    
 ## testing for multidoc chat
 import sys
 from pathlib import Path
@@ -155,14 +158,14 @@ from src.multi_document_chat.retrieval import ConversationalRAG
 def test_document_ingestion_and_rag():
     try:
         test_files = [
-            "/Users/satishpolasi/Documents/LLMOPS/document_portal/data/multi_document_chat/market_analysis_report.docx",
-            "/Users/satishpolasi/Documents/LLMOPS/document_portal/data/multi_document_chat/NIPS-2017-attention-is-all-you-need-Paper.pdf",
-            "/Users/satishpolasi/Documents/LLMOPS/document_portal/data/multi_document_chat/sample.pdf",
-            "/Users/satishpolasi/Documents/LLMOPS/document_portal/data/multi_document_chat/state_of_the_union.txt"
+            "data\\multi_doc_chat\\market_analysis_report.docx",
+            "data\\multi_doc_chat\\NIPS-2017-attention-is-all-you-need-Paper.pdf",
+            "data\\multi_doc_chat\\sample.pdf",
+            "data\\multi_doc_chat\\state_of_the_union.txt"
         ]
         
         uploaded_files = []
-       
+        
         for file_path in test_files:
             if Path(file_path).exists():
                 uploaded_files.append(open(file_path, "rb"))
@@ -203,3 +206,38 @@ def test_document_ingestion_and_rag():
 if __name__ == "__main__":
     test_document_ingestion_and_rag()
     
+    
+    
+# Use this code snippet in your app.
+# If you need more information about configurations
+# or implementing the sample code, visit the AWS docs:
+# https://aws.amazon.com/developer/language/python/
+
+# import boto3
+# from botocore.exceptions import ClientError
+
+
+# def get_secret():
+
+#     secret_name = "api_keys"
+#     region_name = "ap-southeast-2"
+
+#     # Create a Secrets Manager client
+#     session = boto3.session.Session()
+#     client = session.client(
+#         service_name='secretsmanager',
+#         region_name=region_name
+#     )
+
+#     try:
+#         get_secret_value_response = client.get_secret_value(
+#             SecretId=secret_name
+#         )
+#     except ClientError as e:
+#         # For a list of exceptions thrown, see
+#         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+#         raise e
+
+#     secret = get_secret_value_response['SecretString']
+
+#     # Your code goes here.
