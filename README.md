@@ -121,16 +121,16 @@ Docker Hub requires the format:
 
 docker tag my-app:latest your-dockerhub-username/my-app:latest
 
-Example (if your Docker Hub username is tanisi):
+Example (if your Docker Hub username is satish:
 
-docker tag my-app:latest tanisi/my-app:latest
+docker tag my-app:latest satish/my-app:latest
 
 4. Push the image
 docker push your-dockerhub-username/my-app:latest
 
 Example:
 
-docker push tanisi/my-app:latest
+docker push satish/my-app:latest
 
 ✅ After this, the image will be available on Docker Hub under your account.
 You can then pull it from anywhere using:
