@@ -19,7 +19,7 @@ venv/
 faiss_index/
 *.faiss
 *.pkl
-*.json
+#*.json
 *.yaml
 *.yml
 
