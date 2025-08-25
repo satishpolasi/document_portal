@@ -29,3 +29,29 @@ http:/<your_public_ip>:8080
 
 10 how to watch the logs
 search for cloud watch->click on log groups --> check with your running task id --> then open the log for the same task id
+
+
+Types of Services need to deploy on AWS for Document Portal
+ECR – Elastic Container Registry (Repository in AWS like GitHub)
+IAM USER – Newer create Secrete Key as Root User, create a IAM user, assign policies an attach role
+ECS - 
+AWS SECRATE
+
+Types needed to do to deploy on AWS ECS
+1)	Created ECR Repo
+2)	Create IAM USER, assign policies and define security credentials
+3)	Store a new secret in Secret Manager for GROQ & GOOGLE API KEYs
+
+
+AWS ECR configuration
+
+Repository URI: 068989023005.dkr.ecr.us-east-2.amazonaws.com/documentportal
+Repository Name:  documentportal
+AWS Region: us-east-2
+
+ARN: arn:aws:iam::068989023005:user/github-cicd
+
+Define security credentials and capture Access Key & Secret Access Key is needed to configure GitHub Actions with AWS ECR.
+access_key: AKIARAEAQ6MO3SAAEOPP
+secret_access_key: 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
+
